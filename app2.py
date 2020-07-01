@@ -50,6 +50,13 @@ class Window(QWidget):
         self.timeSlider.setRange(0,100)
         self.timeSlider.sliderMoved.connect(self.set_position)
 
+        # Create current and total time label
+        self.currentTimeLabel = QLabel()
+        self.currentTimeLabel.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        self.totalTimeLabel = QLabel()
+        self.totalTimeLabel.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+
+
         # Create volume slider
         self.volumeSlider = QSlider(Qt.Horizontal)
         self.volumeSlider.setRange(0,100)
@@ -79,10 +86,17 @@ class Window(QWidget):
         hboxLayout.addWidget(labelImage)
         hboxLayout.addWidget(self.volumeSlider)
 
+        # set the time labels to another hbox layout
+        hboxLayout2 = QHBoxLayout()
+        hboxLayout2.setContentsMargins(0,0,0,0)
+        hboxLayout2.addWidget(self.currentTimeLabel)
+        hboxLayout2.addWidget(self.timeSlider)
+        hboxLayout2.addWidget(self.totalTimeLabel)
+
         # Create vbox layout
         vboxLayout = QVBoxLayout()
         vboxLayout.addWidget(videoWidget)
-        vboxLayout.addWidget(self.timeSlider)
+        vboxLayout.addLayout(hboxLayout2)
         vboxLayout.addLayout(hboxLayout)
         vboxLayout.addWidget(self.label)
 
@@ -127,10 +141,12 @@ class Window(QWidget):
 
     def time_position_changed(self, position):
         self.timeSlider.setValue(position)
+        self.currentTimeLabel.setText(hhmmss(position))
 
 
     def time_duration_changed(self, duration):
         self.timeSlider.setRange(0, duration)
+        self.totalTimeLabel.setText(hhmmss(duration))
 
 
     def volume_position_changed(self, position):
@@ -148,6 +164,17 @@ class Window(QWidget):
     def handle_errors(self):
         self.playBtn.setEnabled(False)
         self.label.setText(f"Error: {self.mediaPlayer.errorString()}")
+
+
+
+def hhmmss(ms):
+        # s = 1000
+        # m = 60000
+        # h = 3600000
+        s = round(ms / 1000)
+        m, s = divmod(s, 60)
+        h, m = divmod(m, 60)
+        return ("%d:%02d:%02d" % (h,m,s)) if h else ("%d:%02d" % (m,s))
 
 
 
