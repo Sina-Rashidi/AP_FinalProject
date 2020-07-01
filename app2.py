@@ -50,11 +50,13 @@ class Window(QWidget):
         self.timeSlider.setRange(0,100)
         self.timeSlider.sliderMoved.connect(self.set_position)
 
-        # Create current and total time label
+        # Create current and total time labels
         self.currentTimeLabel = QLabel()
         self.currentTimeLabel.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        self.currentTimeLabel.setText("00:00")
         self.totalTimeLabel = QLabel()
         self.totalTimeLabel.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        self.totalTimeLabel.setText("00:00")
 
 
         # Create volume slider
